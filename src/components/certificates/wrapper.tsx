@@ -2,7 +2,7 @@
 
 import { Form } from "./form"
 import { CertList } from "./list"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { getApi } from "@/utils/server-api"
 import { ICertType } from "@/models/cert-type-model"
 import { ICertificate } from "@/models/certificate-model"
@@ -15,15 +15,15 @@ export function Wrapper(props: IProps) {
   const [editCert, setEditCert] = useState<ICertificate | undefined>()
   const [certificates, setCertificates] = useState<ICertificate[]>([])
 
-  const getCertFromApi = () => {
+  const getCertFromApi = useCallback(() => {
     getApi<ICertificate[]>("/api/certificates").then((res) => {
       setCertificates(res ?? [])
     })
-  }
+  }, [])
 
   useEffect(() => {
     getCertFromApi()
-  }, [])
+  }, [getCertFromApi])
 
   return (
     <div className="grid gap-y-8">

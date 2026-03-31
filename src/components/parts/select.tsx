@@ -39,7 +39,6 @@ export function Select(props: IProps) {
         required={selProps.isRequired}
       >
         <option></option>
-
         {options.map((i) => (
           <option key={i.id} value={i.id}>
             {i.title}

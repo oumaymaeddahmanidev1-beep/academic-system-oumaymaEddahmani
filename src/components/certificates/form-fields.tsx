@@ -1,15 +1,13 @@
-"use client"
-
-import { createCertificates } from "@/actions/certificates"
-import { SubmitButton } from "@/components/parts/submit-button"
-import { useBoundStore, useShallow } from "@/store/store-provider"
-import { ICertificate } from "@/models/certificate-model"
-import { ICertType } from "@/models/cert-type-model"
 import { Select } from "../parts/select"
-import { TextField } from "../parts/text-field"
 import { IState } from "@/types/shared-t"
 import { toSelArr } from "@/utils/form/select-helper"
+import { TextField } from "../parts/text-field"
+import { SubmitButton } from "@/components/parts/submit-button"
 import { useActionState, useEffect, useRef } from "react"
+import { createCertificates } from "@/actions/certificates"
+import { ICertType } from "@/models/cert-type-model"
+import { ICertificate } from "@/models/certificate-model"
+import { useBoundStore, useShallow } from "@/store/store-provider"
 
 const initialState: IState = {
   message: "",
@@ -26,6 +24,7 @@ type IProps = {
 
 export function FormFields(props: IProps) {
   const ref = useRef<HTMLFormElement>(null)
+
   const { certTypes, getCertFromApi, editCert, setEditCert } = props
 
   const { setMessage } = useBoundStore(
@@ -52,12 +51,11 @@ export function FormFields(props: IProps) {
       setMessage(state?.message ?? "")
       getCertFromApi()
     }
-  }, [getCertFromApi, setMessage, state])
+  }, [state])
 
   const handleAction = (data: FormData) => {
     formAction(data)
     ref.current?.reset()
-
     if (data.has("id")) {
       setEditCert(undefined)
     }
@@ -92,8 +90,8 @@ export function FormFields(props: IProps) {
         {state?.message}
       </div>
 
-      <div className="mt-1 w-28">
-        <SubmitButton name={editCert?.id ? "Save" : "Add"} />
+      <div className="mt-1 w-14">
+        <SubmitButton />
       </div>
     </form>
   )

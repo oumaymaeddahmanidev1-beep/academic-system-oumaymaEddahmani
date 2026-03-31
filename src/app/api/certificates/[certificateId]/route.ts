@@ -14,12 +14,14 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ certificateId: string }> },
+  _req: NextRequest,
+  ctx: RouteContext<"/api/certificates/[certificateId]">,
 ) {
-  const { certificateId } = await params
+  const { certificateId } = await ctx.params
 
   const certificateService = new CertificateService()
+
+  // add deleteCertificate method in CertificateService
   await certificateService.deleteCertificate(certificateId)
 
   return Response.json({

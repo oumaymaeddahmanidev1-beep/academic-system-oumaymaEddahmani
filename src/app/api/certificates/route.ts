@@ -1,8 +1,7 @@
-import { ICertificate } from "@/models/certificate-model"
 import { CertificateService } from "@/services/certificate-service"
-import { NextRequest } from "next/server"
+import { type NextRequest } from "next/server"
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const certificateService = new CertificateService()
   const certificates = await certificateService.getCertificates()
 
@@ -10,12 +9,10 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const certificate: ICertificate = await request.json()
+  const res = await request.json()
   const certificateService = new CertificateService()
 
-  await certificateService.saveCertificate(certificate)
+  await certificateService.saveCertificate(res)
 
-  return Response.json({
-    message: "The save was completed successfully",
-  })
+  return Response.json({ message: "Data are saved" })
 }
