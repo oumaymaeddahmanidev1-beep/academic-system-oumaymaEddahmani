@@ -10,6 +10,7 @@ const mongoClient = mongoose.connection.getClient()
 const db = mongoClient.db(process.env.MONGO_DB!)
 
 export const auth = betterAuth({
+  baseURL: process.env.BETTER_AUTH_URL ?? process.env.NEXT_PUBLIC_APP_URL,
   database: mongodbAdapter(db, {
     client: mongoClient,
     usePlural: true,

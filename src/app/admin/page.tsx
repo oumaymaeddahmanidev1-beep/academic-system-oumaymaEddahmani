@@ -12,13 +12,13 @@ export default async function AdminPage() {
   return (
     <div className="min-h-screen p-6">
       {/* Title */}
-      <h1 className="text-3xl font-bold mb-6 text-grey-700">Users List</h1>
+      <h1 className="text-3xl font-bold mb-6 text-gray-700">Users List</h1>
 
       {/* Table Card */}
       <div className=" bg-gray-100 rounded-xl shadow overflow-hidden">
         <table className="w-full text-sm text-left">
           {/* Header */}
-          <thead className="bg-grey-100 text-grey-800 uppercase text-xs">
+          <thead className="bg-gray-100 text-gray-800 uppercase text-xs">
             <tr>
               <th className="p-4">Email</th>
               <th className="p-4">Name</th>
