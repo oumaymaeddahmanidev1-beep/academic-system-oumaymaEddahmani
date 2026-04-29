@@ -1,9 +1,12 @@
-import mongoose from "mongoose"
+import { Model, model, models, Schema } from "mongoose"
 
-const groupSchema = new mongoose.Schema({
+export interface IGroup {
+  id?: string
+  name: string
+}
+
+const GroupSchema = new Schema<IGroup>({
   name: { type: String, required: true },
 })
 
-const Group = mongoose.models.Group || mongoose.model("Group", groupSchema)
-
-export default Group
+export const Group: Model<IGroup> = models.Group || model("Group", GroupSchema)

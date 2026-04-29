@@ -1,52 +1,25 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { type ChangeEvent } from "react"
+import { IGroup } from "@/models/group-model"
+import { IGroupStudent } from "@/models/group-student-model"
 
-type Group = {
-  _id: string
-  name: string
+type IProps = {
+  groups: IGroup[]
+  students: IGroupStudent[]
+  selectedGroupId: string
+  setSelectedGroupId: (groupId: string) => void
 }
 
-type Student = {
-  _id: string
-  firstName: string
-  lastName: string
-}
-
-type StudentListProps = {
-  groups: Group[]
-}
-
-export default function StudentList({ groups }: StudentListProps) {
-  const [students, setStudents] = useState<Student[]>([])
-  const [selectedGroupId, setSelectedGroupId] = useState(groups[0]?._id ?? "")
-  const [isLoading, setIsLoading] = useState(false)
+export function StudentList(props: IProps) {
+  const { groups, students, selectedGroupId, setSelectedGroupId } = props
 
   const selectedGroup =
-    groups.find((group) => group._id === selectedGroupId) ?? null
+    groups.find((group) => group.id === selectedGroupId) ?? null
 
-  const loadStudents = async (groupId: string) => {
-    if (!groupId) {
-      setStudents([])
-      return
-    }
-
-    setIsLoading(true)
-
-    try {
-      const res = await fetch(`/api/group-students/${groupId}`)
-      const data: Student[] = await res.json()
-      setStudents(data)
-    } finally {
-      setIsLoading(false)
-    }
+  const changeGroup = (event: ChangeEvent<HTMLSelectElement>) => {
+    setSelectedGroupId(event.target.value)
   }
-
-  useEffect(() => {
-    if (selectedGroupId) {
-      void loadStudents(selectedGroupId)
-    }
-  }, [selectedGroupId])
 
   return (
     <div className="grid grid-flow-row gap-5">
@@ -58,12 +31,12 @@ export default function StudentList({ groups }: StudentListProps) {
             </span>
             <select
               value={selectedGroupId}
-              onChange={(e) => setSelectedGroupId(e.target.value)}
+              onChange={changeGroup}
               className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 outline-none focus:border-orange-500"
             >
               <option value="">Select group</option>
               {groups.map((g) => (
-                <option key={g._id} value={g._id}>
+                <option key={g.id} value={g.id}>
                   {g.name}
                 </option>
               ))}
@@ -103,7 +76,7 @@ export default function StudentList({ groups }: StudentListProps) {
             </thead>
 
             <tbody>
-              {!isLoading && students.length === 0 ? (
+              {students.length === 0 ? (
                 <tr>
                   <td colSpan={2} className="px-5 py-8 text-sm text-gray-500">
                     No students found for this group.
@@ -111,17 +84,9 @@ export default function StudentList({ groups }: StudentListProps) {
                 </tr>
               ) : null}
 
-              {isLoading ? (
-                <tr>
-                  <td colSpan={2} className="px-5 py-8 text-sm text-gray-500">
-                    Loading students...
-                  </td>
-                </tr>
-              ) : null}
-
               {students.map((s, index) => (
                 <tr
-                  key={s._id}
+                  key={s.id}
                   className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
                 >
                   <td className="px-5 py-3 text-sm text-gray-900">

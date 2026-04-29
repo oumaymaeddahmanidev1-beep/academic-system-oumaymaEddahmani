@@ -1,11 +1,23 @@
-import mongoose from "mongoose"
+import { Model, model, models, Schema, Types } from "mongoose"
 
-const GroupStudentSchema = new mongoose.Schema(
+export interface IGroupStudent {
+  id?: string
+  firstName: string
+  lastName: string
+  groupId: string
+}
+
+interface IGroupStudentDocument
+  extends Omit<IGroupStudent, "id" | "groupId"> {
+  groupId: Types.ObjectId
+}
+
+const GroupStudentSchema = new Schema<IGroupStudentDocument>(
   {
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     groupId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Group",
       required: true,
     },
@@ -15,5 +27,5 @@ const GroupStudentSchema = new mongoose.Schema(
   },
 )
 
-export default mongoose.models.GroupStudent ||
-  mongoose.model("GroupStudent", GroupStudentSchema)
+export const GroupStudent: Model<IGroupStudentDocument> =
+  models.GroupStudent || model("GroupStudent", GroupStudentSchema)

@@ -1,25 +1,19 @@
-import dbConnect from "@/lib/db"
-import Group from "@/models/group-model"
-import StudentList from "@/components/students/student-list"
+import { GroupService } from "@/services/group-service"
+import { Wrapper } from "@/components/students/wrapper"
 
-type GroupOption = {
-  _id: string
-  name: string
+type GroupStudentsPageProps = {
+  searchParams?: Promise<{ groupId?: string }>
 }
 
-export default async function Page() {
-  await dbConnect()
-
-  const groupDocs = await Group.find().lean()
-  const groups: GroupOption[] = groupDocs.map((group) => ({
-    _id: String(group._id),
-    name: group.name,
-  }))
+export default async function GroupStudentsPage(props: GroupStudentsPageProps) {
+  const searchParams = props.searchParams ? await props.searchParams : undefined
+  const groupService = new GroupService()
+  const groups = await groupService.getAll()
 
   return (
     <div className="grid grid-flow-row gap-4">
-      <h1 className="font-bold text-xl">Students by group</h1>
-      <StudentList groups={groups} />
+      <h1 className="font-bold text-xl">Group Students</h1>
+      <Wrapper groups={groups} initialGroupId={searchParams?.groupId ?? ""} />
     </div>
   )
 }
